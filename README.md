@@ -201,7 +201,7 @@ CGRPAOptimizer (structure.py)
 If you use this optimizer in your research, please cite:
 
 ```bibtex
-@misc{cgrpa2025,
+@misc{cgrpa2026,
   title={CGRPA: Curvature-Gated Recursive Parameter Anchoring},
   author={Danial farshbaf},
   year={2026},
