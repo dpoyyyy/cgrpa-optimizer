@@ -13,12 +13,12 @@ CGRPA is a second-order optimization method designed to leverage curvature infor
 
 ## Features
 
-- ✅ **Second-order optimization** without full Hessian computation
-- ✅ **Automatic reliability detection** via variance monitoring
-- ✅ **Numerically stable** with extensive safety guards
-- ✅ **PyTorch native** implementation
-- ✅ **Drop-in replacement** for standard optimizers like Adam or SGD
-- ✅ **GPU compatible**
+-  **Second-order optimization** without full Hessian computation
+-  **Automatic reliability detection** via variance monitoring
+-  **Numerically stable** with extensive safety guards
+-  **PyTorch native** implementation
+-  **Drop-in replacement** for standard optimizers like Adam or SGD
+-  **GPU compatible**
 
 ## Installation
 
