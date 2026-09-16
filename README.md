@@ -27,6 +27,14 @@ CGRPA is a second-order optimization method designed to leverage curvature infor
 ```
 torch >= 1.9.0
 torchvision (for examples)
+numpy
+pytest (for tests)
+```
+
+Install with:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ### Setup
@@ -37,6 +45,39 @@ Clone the repository and ensure all modules are in the same directory:
 git clone https://github.com/dpoyyyy/cgrpa-optimizer.git
 cd cgrpa-optimizer
 ```
+
+## Testing
+
+```bash
+python -m pytest tests/ -v
+```
+
+27 tests cover the Hutchinson estimator (unbiasedness, empty/zero-grad edge
+cases), VGR (gate bounds, variance non-negativity), Direction Modifier
+(gate limits, negative curvature, tau_max bound), RPA (anchor init,
+curvature-coupled interpolation), and the optimizer itself (HVP-failure
+fallback, weight decay, NaN-grad skip, multiple parameter groups, resume
+via state_dict, determinism).
+
+## Reproducibility (Phase A)
+
+`train_mvp.py` calls `seed_everything(42)` before training, which seeds
+`os`, `random`, `numpy`, `torch`, and `torch.cuda`, forces
+`cudnn.deterministic=True` / `cudnn.benchmark=False`, and enables
+`torch.use_deterministic_algorithms(True, warn_only=True)`. The
+`DataLoader` uses a seeded `torch.Generator()` and a `worker_init_fn` so
+shuffling and multi-worker sampling are reproducible run-to-run.
+
+## Safe HVP Failure Path
+
+If the Hutchinson HVP computation raises (e.g. graph issues, OOM), the
+optimizer no longer silently substitutes zero curvature — zero curvature
+would drive the trust-region scaling toward `tau_max` and can blow up the
+update. Instead, a failed HVP for a step (or a parameter missing from the
+curvature estimates) routes that parameter through a plain first-order SGD
+update (`p -= lr * grad`, with weight decay folded into `grad` beforehand)
+and skips VGR/Direction Modifier/RPA entirely for that parameter. The
+failure is logged via the standard `logging` module (`WARNING` level).
 
 ## Quick Start
 
